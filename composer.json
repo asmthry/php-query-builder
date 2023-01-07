@@ -1,0 +1,17 @@
+{
+    "name": "asmthry/php-query-builder",
+    "description": "Get database data using simple methods",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Asmthry\\PhpQueryBuilder\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "asmthry",
+            "email": "asmthry@gmail.com"
+        }
+    ],
+    "require": {}
+}
