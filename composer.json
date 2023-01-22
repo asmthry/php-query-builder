@@ -1,6 +1,6 @@
 {
     "name": "asmthry/php-query-builder",
-    "description": "Get database data using simple methods",
+    "description": "PHP Query Builder Library",
     "license": "MIT",
     "autoload": {
         "psr-4": {

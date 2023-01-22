@@ -10,7 +10,7 @@ use PDO;
 
 class Connection
 {
-    private static PDO $database;
+    private static $database;
 
     public function __construct()
     {
@@ -38,7 +38,8 @@ class Connection
                 $details['username'],
                 $details['password'],
                 [
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
                 ]
             );
         } catch (Exception $e) {
@@ -72,5 +73,23 @@ class Connection
         }
 
         return $details;
+    }
+
+    /**
+     * Prepare query and replace dynamic values
+     *
+     * @param string $query Query string
+     * @param array $values Parameters to replace values
+     */
+    public function executeQuery(string $query, array $values = [])
+    {
+        $query = static::$database->prepare($query);
+        $query->execute($values);
+        return $query;
+    }
+
+    public function __destruct()
+    {
+        static::$database = null;
     }
 }
