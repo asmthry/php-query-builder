@@ -24,6 +24,22 @@ class Model extends MySql
     }
 }
 ```
+
+## Set table name
+
+```PHP
+// Select data from users table
+(new Model)->from('users'); 
+
+// Or you can define $table property in your class
+class Users extends Model{
+    protected $table = 'users';
+}
+
+// Select data from 'users' table
+(new Users); 
+```
+
 ## Select fields from table
 
 ```PHP
