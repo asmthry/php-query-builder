@@ -27,12 +27,15 @@ abstract class MySql extends QueryBuilder
      * @return array Database connection details
      */
     abstract protected function database(): array;
-    
+
     /**
      * Hide all properties
      */
     public function __debugInfo()
     {
-        return [];
+        return [
+            'select' => [],
+            'where' => []
+        ];
     }
 }
