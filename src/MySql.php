@@ -2,9 +2,9 @@
 
 namespace Asmthry\PhpQueryBuilder;
 
-use Asmthry\PhpQueryBuilder\MySql\MyQueryBuilder;
+use Asmthry\PhpQueryBuilder\MySql\QueryBuilder;
 
-abstract class MySql extends MyQueryBuilder
+abstract class MySql extends QueryBuilder
 {
     /**
      * If database type is mysql then

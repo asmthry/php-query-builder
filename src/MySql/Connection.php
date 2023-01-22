@@ -8,7 +8,7 @@ use Asmthry\PhpQueryBuilder\Exceptions\ItemNotFoundException;
 use Exception;
 use PDO;
 
-class MyQueryBuilder
+class Connection
 {
     private static PDO $database;
 
@@ -49,12 +49,6 @@ class MyQueryBuilder
     /**
      * Validate the all database connection details is available
      *
-     * $details = array(
-     *   'host' => 'Hostname',
-     *   'username' => 'Database username',
-     *   'password' => 'Database password',
-     *   'database' => 'Database name'
-     * );
      * @return connection details
      */
     private function getDetails()
