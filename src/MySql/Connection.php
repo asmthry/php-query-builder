@@ -73,4 +73,18 @@ class Connection
 
         return $details;
     }
+
+    /**
+     * Prepare query and replace dynamic values
+     *
+     * @param string $query Query string
+     * @param array $values Parameters to replace values
+     */
+    public function prepareQuery(string $query, array $values = [])
+    {
+        $query = self::$database->prepare($query);
+        $query->execute($values);
+
+        return $query;
+    }
 }
