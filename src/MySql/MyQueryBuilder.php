@@ -3,7 +3,9 @@
 namespace Asmthry\PhpQueryBuilder\MySql;
 
 use Asmthry\PhpQueryBuilder\Exceptions\FnNotFoundException;
+use Asmthry\PhpQueryBuilder\Exceptions\InvalidDetailsException;
 use Asmthry\PhpQueryBuilder\Exceptions\ItemNotFoundException;
+use Exception;
 use PDO;
 
 class MyQueryBuilder
@@ -14,7 +16,7 @@ class MyQueryBuilder
     {
         $this->createConnection();
     }
-    
+
     /**
      * Create database connection
      */
@@ -26,14 +28,22 @@ class MyQueryBuilder
 
         $details = $this->getDetails();
 
-        static::$database = new PDO(
-            "mysql:dbname={$details['database']};host={$details['host']}",
-            $details['username'],
-            $details['password'],
-            [
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
-            ]
-        );
+        if (isset(static::$database)) {
+            return;
+        }
+
+        try {
+            static::$database = new PDO(
+                "mysql:dbname={$details['database']};host={$details['host']}",
+                $details['username'],
+                $details['password'],
+                [
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
+                ]
+            );
+        } catch (Exception $e) {
+            throw new InvalidDetailsException();
+        }
     }
 
     /**
