@@ -2,21 +2,21 @@
 
 namespace Asmthry\PhpQueryBuilder\MySql;
 
-class QueryBuilder extends Connection
+class QueryBuilder extends BuildQuery
 {
     /**
      * Fetch result from database table
      */
-    public static function get()
+    public function get()
     {
-        return parent::prepareQuery('SELECT * FROM users')->fetchAll();
+        return $this->runQuery(QueryStructure::SELECT)->fetchObject();
     }
 
     /**
      * Fetch result from database table
      */
-    public static function first()
+    public function first()
     {
-        return parent::prepareQuery('SELECT * FROM users')->fetchObject();
+        return $this->runQuery(QueryStructure::SELECT)->fetchObject();
     }
 }

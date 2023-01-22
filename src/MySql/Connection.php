@@ -38,7 +38,8 @@ class Connection
                 $details['username'],
                 $details['password'],
                 [
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
                 ]
             );
         } catch (Exception $e) {
@@ -80,10 +81,11 @@ class Connection
      * @param string $query Query string
      * @param array $values Parameters to replace values
      */
-    public function prepareQuery(string $query, array $values = [])
+    public function executeQuery(string $query, array $values = [])
     {
-        $query = self::$database->prepare($query);
+        $query = static::$database->prepare($query);
         $query->execute($values);
+
 
         return $query;
     }
