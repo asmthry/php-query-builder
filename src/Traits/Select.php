@@ -6,6 +6,12 @@ trait Select
 {
     private array $select = [];
 
+    /**
+     * Select fields from the table
+     * You can use {table} to dynamical replace table name
+     *
+     * @param ...$args Select fields
+     */
     public function select(...$args)
     {
         return $this->addToSelect(func_get_args());
@@ -24,15 +30,15 @@ trait Select
         return $this;
     }
 
-    public function getSelect()
+    protected function getSelect()
     {
         return implode(',', $this->select);
     }
 
-    public function replaceSelect(string $query, string $default = '*')
+    protected function replaceSelect(string $query, string $default = '*')
     {
         if (empty($this->select)) {
-            $this->select[] = '*';
+            $this->select[] = $default;
         }
 
         return str_replace('{select}', $this->getSelect(), $query);

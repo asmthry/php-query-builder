@@ -16,10 +16,27 @@ class BuildQuery extends Connection
      */
     protected $table;
 
+    protected function runQuery()
+    {
+        $query = $this->prepareQuery(QueryStructure::SELECT);
+
+        return $this->executeQuery($query['string'], $query['params']);
+    }
+
+    protected function setTable(string $table)
+    {
+        $this->table = $table;
+    }
+
+    protected function getTable()
+    {
+        return $this->table;
+    }
+
     private function prepareQuery(string $baseQuery)
     {
         $baseQuery = $this->replaceSelect($baseQuery);
-        
+
         return [
             'string' => $this->replaceTableNames($baseQuery),
             'params' => []
@@ -28,17 +45,10 @@ class BuildQuery extends Connection
 
     private function replaceTableNames(string $query)
     {
-        if (!$this->table) {
-            $this->table = ClassHelper::classToTable($this);
+        if (!$this->getTable()) {
+            $this->setTable(ClassHelper::classToTable($this));
         }
 
-        return str_replace('{table}', $this->table, $query);
-    }
-
-    protected function runQuery()
-    {
-        $query = $this->prepareQuery(QueryStructure::SELECT);
-
-        return $this->executeQuery($query['string'], $query['params']);
+        return str_replace('{table}', $this->getTable(), $query);
     }
 }

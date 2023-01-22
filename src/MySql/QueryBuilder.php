@@ -9,7 +9,7 @@ class QueryBuilder extends BuildQuery
      */
     public function get()
     {
-        return $this->runQuery(QueryStructure::SELECT)->fetchObject();
+        return $this->runQuery(QueryStructure::SELECT)->fetchAll();
     }
 
     /**
@@ -18,5 +18,17 @@ class QueryBuilder extends BuildQuery
     public function first()
     {
         return $this->runQuery(QueryStructure::SELECT)->fetchObject();
+    }
+
+    /**
+     * Set custom table name
+     *
+     * @param string $table Name of the table
+     */
+    public function from(string $table)
+    {
+        $this->setTable($table);
+
+        return $this;
     }
 }
