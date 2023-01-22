@@ -2,9 +2,6 @@
 
 namespace Asmthry\PhpQueryBuilder;
 
-class QueryBuilder
+final class QueryBuilder
 {
-    public function __construct()
-    {
-    }
 }
