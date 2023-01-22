@@ -10,7 +10,7 @@ use PDO;
 
 class Connection
 {
-    private static PDO $database;
+    private static $database;
 
     public function __construct()
     {
@@ -85,8 +85,11 @@ class Connection
     {
         $query = static::$database->prepare($query);
         $query->execute($values);
-
-
         return $query;
+    }
+
+    public function __destruct()
+    {
+        static::$database = null;
     }
 }
