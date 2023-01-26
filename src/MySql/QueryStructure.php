@@ -18,5 +18,5 @@ final class QueryStructure
      *
      * @property const SELECT
      */
-    public const SELECT = 'SELECT {select} FROM {table}';
+    public const SELECT = 'SELECT {select} FROM {table} {where}';
 }

@@ -91,7 +91,7 @@ class Connection
      * @param array $values Parameters to replace values
      */
     public function executeQuery(string $query, array $values = [])
-    {        
+    {
         $query = static::$database->prepare($query);
         $query->execute($values);
 

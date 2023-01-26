@@ -12,11 +12,14 @@
 namespace Asmthry\PhpQueryBuilder\MySql;
 
 use Asmthry\PhpQueryBuilder\Helpers\ClassHelper;
+use Asmthry\PhpQueryBuilder\Helpers\MysqlHelper;
 use Asmthry\PhpQueryBuilder\Traits\Select;
+use Asmthry\PhpQueryBuilder\Traits\Where;
 
 class BuildQuery extends Connection
 {
     use Select;
+    use Where;
 
     /**
      * Name of the table
@@ -72,7 +75,11 @@ class BuildQuery extends Connection
      */
     protected function getTable()
     {
-        return isset($this->table) ? $this->table : null;
+        if (!isset($this->table)) {
+            $this->setTable(ClassHelper::classToTable($this));
+        }
+
+        return $this->table;
     }
 
     /**
@@ -100,9 +107,14 @@ class BuildQuery extends Connection
      *
      * @return object $this
      */
-    protected function updateQueryString(string $query)
+    protected function updateQueryString(array $functions)
     {
-        $this->queryString = $query;
+        foreach ($functions as $key => $fn) {
+            $this->replacePlaceHolders(
+                $key,
+                $this->{$fn}($this->getQueryString())
+            );
+        }
 
         return $this;
     }
@@ -110,11 +122,15 @@ class BuildQuery extends Connection
     /**
      * Set query string parameters
      *
-     * @param string $value Value for the query param
+     * @param string|array $value Value for the query param
      */
-    protected function setQueryParams(string $value)
+    protected function setQueryParams($values)
     {
-        $this->queryParams[] = $value;
+        if (is_array($values)) {
+            $this->queryParams = array_merge($this->getQueryParams(), $values);
+        } else {
+            $this->queryParams[] = $values;
+        }
     }
 
     /**
@@ -128,35 +144,54 @@ class BuildQuery extends Connection
     }
 
     /**
+     * Replace string place holders
+     *
+     * @return null
+     */
+    public function replacePlaceHolders($key, $replaceString)
+    {
+        return $this->setQueryString(str_replace($key, $replaceString, $this->getQueryString()));
+    }
+
+    /**
+     * Prepare select statement from select array
+     *
+     * @return string
+     */
+    public function prepareSelect()
+    {
+        return implode(',', $this->getSelect());
+    }
+
+    /**
      * Replace all query placeholders and prepare query
      *
      * @return object
      */
     private function prepareQuery()
     {
-        return $this->replaceTableNames()
-            ->updateQueryString(
-                $this->replaceSelect($this->queryString)
-            );
+        return $this->updateQueryString(
+            [
+                '{select}' => 'prepareSelect',
+                '{where}' => 'prepareWhereStatement',
+                '{table}' => 'getTable'
+            ]
+        );
     }
 
     /**
-     * Replace table placeholder string {table}
+     * Prepare where statement using array
      *
-     * @return object
+     * @return string
      */
-    private function replaceTableNames()
+    private function prepareWhereStatement(): string
     {
-        if (empty($this->getTable())) {
-            $this->setTable(ClassHelper::classToTable($this));
+        $where = MysqlHelper::prepareWhere($this->getWhere());
+
+        if (array_key_exists('params', $where)) {
+            $this->setQueryParams($where['params']);
         }
 
-        return $this->updateQueryString(
-            str_replace(
-                '{table}',
-                $this->getTable(),
-                $this->queryString
-            )
-        );
+        return array_key_exists('query', $where) ? $where['query'] : '';
     }
 }
