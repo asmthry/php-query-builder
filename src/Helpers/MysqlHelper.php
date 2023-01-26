@@ -16,6 +16,20 @@ use Asmthry\PhpQueryBuilder\MySql\QueryConstantsValue;
 class MysqlHelper
 {
     /**
+     * Store current loop item index
+     *
+     * @var int $key
+     */
+    private static int $key = 0;
+    
+    /**
+     * Store query data
+     *
+     * @var array $queryData
+     */
+    private static array $queryData = [];
+
+    /**
      * Prepare where statement from condition
      *
      * @param array $conditions mysql where conditions array
@@ -27,38 +41,70 @@ class MysqlHelper
             return [];
         }
 
-        $data = [
+        static::$queryData = [
             'query' => 'WHERE ',
             'params' => []
         ];
         $count = count($conditions) - 1;
 
         foreach ($conditions as $key => $item) {
+            static::$key = $key;
             $isLast = $count > $key && !isset($conditions[$key + 1]['group']);
-            self::createWhereCondition($data, $key, $item, $isLast);
+            self::createWhereCondition($item, $isLast);
         }
 
-        return $data;
+        return static::$queryData;
     }
 
     /**
      * Prepare where query string
      *
-     * @param array &$data pass the reference of the query string
-     * @param string $key Index of current value
      * @param array $item current where array item to prepare query
      * @param bool $isLast do not append AND/OR if query is last
      */
-    private static function createWhereCondition(array &$data, string $key, array $item, bool $isLast)
+    private static function createWhereCondition(array $item, bool $isLast)
     {
-        $index = ":where_{$key}";
+        $index = ":where_" . static::$key;
 
-        $data['query'] .= "`{$item['field']}`";
-        $data['query'] .= QueryConstantsValue::get($item['condition']) . "{$index} ";
-        $data['params'][$index] = $item['value'];
+        static::$queryData['query'] .= "`{$item['field']}`";
+
+        if (isset($item['in'])) {
+            self::createWhereInCondition($item, $index, $isLast);
+        } else {
+            static::$queryData['query'] .= QueryConstantsValue::get($item['condition']) . "{$index} ";
+            static::$queryData['params'][$index] = $item['value'];
+        }
 
         if ($isLast) {
-            $data['query'] .= $item['where_type'];
+            static::$queryData['query'] .= $item['where_type'];
+        }
+    }
+
+    /**
+     * Prepare where query string
+     *
+     * @param array $item current where array item to prepare query
+     * @param string $index Index of current where
+     * @param bool $isLast do not append AND/OR if query is last
+     */
+    private static function createWhereInCondition(array $item, string $index, bool $isLast)
+    {
+        if (!$item['in']) {
+            return;
+        }
+
+        $data = [];
+
+        foreach ($item['in'] as $key => $value) {
+            $data[] = $inIndex = "{$index}_in_$key";
+            static::$queryData['params'][$inIndex] = $value;
+        }
+
+        static::$queryData['query'] .= QueryConstantsValue::get($item['condition']) .
+            "(" . implode(',', $data) . ")";
+
+        if ($isLast) {
+            static::$queryData['query'] .= $item['where_type'];
         }
     }
 

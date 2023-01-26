@@ -26,7 +26,21 @@ class QueryConstantsValue
      * @var const NOTEQUAL equal mysql statement '!='
      */
     public const NOTEQUAL = '!=';
-    
+
+    /**
+     * One value must be in an array
+     *
+     * @var const IN equal mysql statement 'IN'
+     */
+    public const IN = ' IN ';
+
+    /**
+     * One value must not be in an array
+     *
+     * @var const NOTIN equal mysql statement 'NOT IN'
+     */
+    public const NOTIN = ' NOT IN ';
+
     /**
      * This function will return mysql statement value
      *

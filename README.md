@@ -58,9 +58,20 @@ class Users extends Model{
     ->where(['age' => 24, 'name' => 'asmthry']);
 ```
 ## Where NOT statement
-
 ```PHP
 (new Users)
     ->whereNot('id', 1)
     ->whereNot(['age' => 24, 'name' => 'asmthry']);
+```
+
+## Where IN statement
+```PHP
+(new Users)
+    ->whereIn('id', [1, 2]);
+```
+
+## Where NOT IN statement
+```PHP
+(new Users)
+    ->whereNotIn('id', [1, 2]);
 ```

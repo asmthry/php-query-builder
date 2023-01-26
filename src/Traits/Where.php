@@ -49,6 +49,50 @@ trait Where
     }
 
     /**
+     * Prepare Where IN condition array
+     *
+     * @param string $field field name
+     * @param array $values values needs to check
+     * @return object Will return current instance
+     */
+    public function whereIn(string $field, array $values)
+    {
+        if (!$values) {
+            return $this;
+        }
+
+        $this->where[] = [
+            "field" => $field,
+            "in" => $values,
+            "condition" => QueryConstants::IN
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Prepare Where NOT IN condition array
+     *
+     * @param string $field field name
+     * @param array $values values needs to avoid
+     * @return object Will return current instance
+     */
+    public function whereNotIn(string $field, array $values)
+    {
+        if (!$values) {
+            return $this;
+        }
+
+        $this->where[] = [
+            "field" => $field,
+            "in" => $values,
+            "condition" => QueryConstants::NOTIN
+        ];
+
+        return $this;
+    }
+
+    /**
      * Where Condition array
      *
      * @return array Where array

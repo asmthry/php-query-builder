@@ -29,4 +29,18 @@ class QueryConstants
      * @var const NOTEQUAL
      */
     public const NOTEQUAL = 'NOTEQUAL';
+
+    /**
+     * One value must be in an array
+     *
+     * @var const IN
+     */
+    public const IN = 'IN';
+
+    /**
+     * One value must not be in an array
+     *
+     * @var const NOTIN
+     */
+    public const NOTIN = 'NOTIN';
 }
