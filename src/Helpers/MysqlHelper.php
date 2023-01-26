@@ -45,6 +45,7 @@ class MysqlHelper
      * Prepare where query string
      *
      * @param array &$data pass the reference of the query string
+     * @param string $key Index of current value
      * @param array $item current where array item to prepare query
      * @param bool $isLast do not append AND/OR if query is last
      */

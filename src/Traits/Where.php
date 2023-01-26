@@ -36,6 +36,19 @@ trait Where
     }
 
     /**
+     * Prepare Where condition array
+     *
+     * @param array|string $where field name or condition array
+     * $where = [{field} => {value}];
+     * @param string $value value for the field
+     * @return object Will return current instance
+     */
+    public function whereNot($where, string $value = null)
+    {
+        return $this->prepareWhereArray($where, QueryConstants::NOTEQUAL, $value);
+    }
+
+    /**
      * Where Condition array
      *
      * @return array Where array

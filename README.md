@@ -49,3 +49,18 @@ class Users extends Model{
    ->select('email', 'phone')
    ->get();
 ```
+
+## Where statement
+
+```PHP
+(new Users)
+    ->where('id', 1)
+    ->where(['age' => 24, 'name' => 'asmthry']);
+```
+## Where NOT statement
+
+```PHP
+(new Users)
+    ->whereNot('id', 1)
+    ->whereNot(['age' => 24, 'name' => 'asmthry']);
+```
