@@ -57,4 +57,18 @@ class QueryConstants
      * @var const END
      */
     public const END = 'END';
+
+    /**
+     * Query AND
+     *
+     * @var const AND
+     */
+    public const AND = 'AND';
+
+    /**
+     * Query OR
+     *
+     * @var const OR
+     */
+    public const OR = 'OR';
 }

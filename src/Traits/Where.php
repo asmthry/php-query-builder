@@ -33,7 +33,21 @@ trait Where
      */
     public function where($where, string $value = null)
     {
-        return $this->prepareWhereArray($where, QueryConstants::EQUAL, $value);
+        return $this->prepareWhere($where, QueryConstants::EQUAL, QueryConstants::AND, $value);
+    }
+
+
+    /**
+     * Prepare or where condition
+     *
+     * @param array|string $where field name or condition array
+     * $where = [{field} => {value}]
+     * @param string $value value for the field
+     * @return object Will return current instance
+     */
+    public function orWhere($where, string $value = null)
+    {
+        return $this->prepareWhere($where, QueryConstants::EQUAL, QueryConstants::OR, $value);
     }
 
     /**
@@ -46,7 +60,20 @@ trait Where
      */
     public function whereNot($where, string $value = null)
     {
-        return $this->prepareWhereArray($where, QueryConstants::NOTEQUAL, $value);
+        return $this->prepareWhere($where, QueryConstants::NOTEQUAL, QueryConstants::AND, $value);
+    }
+
+    /**
+     * Prepare Where condition array
+     *
+     * @param array|string $where field name or condition array
+     * $where = [{field} => {value}];
+     * @param string $value value for the field
+     * @return object Will return current instance
+     */
+    public function orWhereNot($where, string $value = null)
+    {
+        return $this->prepareWhere($where, QueryConstants::NOTEQUAL, QueryConstants::OR, $value);
     }
 
     /**
@@ -58,17 +85,19 @@ trait Where
      */
     public function whereIn(string $field, array $values)
     {
-        if (!$values) {
-            return $this;
-        }
+        return $this->prepareWhereIn($field, $values, QueryConstants::IN, QueryConstants::AND);
+    }
 
-        $this->where[] = [
-            "field" => $field,
-            "in" => $values,
-            "condition" => QueryConstants::IN
-        ];
-
-        return $this;
+    /**
+     * Prepare or where in condition array
+     *
+     * @param string $field field name
+     * @param array $values values needs to check
+     * @return object Will return current instance
+     */
+    public function orWhereIn(string $field, array $values)
+    {
+        return $this->prepareWhereIn($field, $values, QueryConstants::IN, QueryConstants::OR);
     }
 
     /**
@@ -80,17 +109,19 @@ trait Where
      */
     public function whereNotIn(string $field, array $values)
     {
-        if (!$values) {
-            return $this;
-        }
+        return $this->prepareWhereIn($field, $values, QueryConstants::NOTIN, QueryConstants::AND);
+    }
 
-        $this->where[] = [
-            "field" => $field,
-            "in" => $values,
-            "condition" => QueryConstants::NOTIN
-        ];
-
-        return $this;
+    /**
+     * Prepare or where NOT IN condition array
+     *
+     * @param string $field field name
+     * @param array $values values needs to avoid
+     * @return object Will return current instance
+     */
+    public function orWhereNotIn(string $field, array $values)
+    {
+        return $this->prepareWhereIn($field, $values, QueryConstants::NOTIN, QueryConstants::OR);
     }
 
     /**
@@ -167,16 +198,12 @@ trait Where
      * @param string $whereType Where join type
      * @return object $this
      */
-    private function prepareWhereArray($where, $condition, string $value = null, string $whereType = 'AND')
+    private function prepareWhere($where, $condition, $whereType, string $value = null)
     {
-        if (!in_array($whereType, ["AND", "OR"])) {
-            throw new \Exception("In valid group logic");
-        }
-
         if (is_array($where)) {
             foreach ($where as $key => $value) {
                 $this->where[] = [
-                    'where_type' => " {$whereType} ",
+                    'where_type' => $whereType,
                     'field' => $key,
                     'value' => $value,
                     'condition' => $condition
@@ -184,12 +211,28 @@ trait Where
             }
         } else {
             $this->where[] = [
-                'where_type' => " {$whereType} ",
+                'where_type' => $whereType,
                 'field' => $where,
                 'value' => $value,
                 'condition' => $condition
             ];
         }
+
+        return $this;
+    }
+
+    private function prepareWhereIn(string $field, array $values, $condition, $whereType)
+    {
+        if (!$values) {
+            return $this;
+        }
+
+        $this->where[] = [
+            'where_type' => $whereType,
+            'field' => $field,
+            'in' => $values,
+            'condition' => $condition
+        ];
 
         return $this;
     }

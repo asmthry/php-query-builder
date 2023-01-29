@@ -45,15 +45,13 @@ class MysqlHelper
             'query' => 'WHERE ',
             'params' => []
         ];
-        $count = count($conditions) - 1;
 
         foreach ($conditions as $key => $item) {
             static::$key = $key;
             if (array_key_exists('group', $item)) {
                 static::createWhereGroupCondition($item);
             } else {
-                $isLast = $count > $key && !isset($conditions[$key + 1]['group']);
-                self::createWhereCondition($item, $isLast);
+                self::createWhereCondition($item);
             }
         }
 
@@ -66,21 +64,21 @@ class MysqlHelper
      * @param array $item current where array item to prepare query
      * @param bool $isLast do not append AND/OR if query is last
      */
-    private static function createWhereCondition(array $item, bool $isLast)
+    private static function createWhereCondition(array $item)
     {
         $index = ":where_" . static::$key;
+
+        if (static::$key !== 0) {
+            static::$queryData['query'] .= QueryConstantsValue::get($item['where_type']);
+        }
 
         static::$queryData['query'] .= "`{$item['field']}`";
 
         if (isset($item['in'])) {
-            self::createWhereInCondition($item, $index, $isLast);
+            self::createWhereInCondition($item, $index);
         } else {
             static::$queryData['query'] .= QueryConstantsValue::get($item['condition']) . "{$index} ";
             static::$queryData['params'][$index] = $item['value'];
-        }
-
-        if ($isLast) {
-            static::$queryData['query'] .= $item['where_type'];
         }
     }
 
@@ -91,7 +89,7 @@ class MysqlHelper
      * @param string $index Index of current where
      * @param bool $isLast do not append AND/OR if query is last
      */
-    private static function createWhereInCondition(array $item, string $index, bool $isLast)
+    private static function createWhereInCondition(array $item, string $index)
     {
         if (!$item['in']) {
             return;
@@ -106,10 +104,6 @@ class MysqlHelper
 
         static::$queryData['query'] .= QueryConstantsValue::get($item['condition']) .
             "(" . implode(',', $data) . ")";
-
-        if ($isLast) {
-            static::$queryData['query'] .= $item['where_type'];
-        }
     }
 
     /**

@@ -56,6 +56,20 @@ class QueryConstantsValue
     public const END = ')';
 
     /**
+     * Query AND
+     *
+     * @var const AND
+     */
+    public const AND = ' AND ';
+
+    /**
+     * Query OR
+     *
+     * @var const OR
+     */
+    public const OR = ' OR ';
+
+    /**
      * This function will return mysql statement value
      *
      * @param string $const name of the constant
