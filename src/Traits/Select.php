@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the asmthry package.
+ *
+ * (c) asmthry <asmthry@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Asmthry\PhpQueryBuilder\Traits;
 
 trait Select
@@ -17,6 +26,11 @@ trait Select
         return $this->addToSelect(func_get_args());
     }
 
+    /**
+     * Add field name to select array
+     *
+     * @return object $this
+     */
     private function addToSelect(array $args)
     {
         foreach ($args as $value) {
@@ -30,17 +44,13 @@ trait Select
         return $this;
     }
 
-    protected function getSelect()
+    /**
+     * Get select array
+     *
+     * @return array
+     */
+    protected function getSelect(string $default = '*'): array
     {
-        return implode(',', $this->select);
-    }
-
-    protected function replaceSelect(string $query, string $default = '*')
-    {
-        if (empty($this->select)) {
-            $this->select[] = $default;
-        }
-
-        return str_replace('{select}', $this->getSelect(), $query);
+        return $this->select ? $this->select : [$default];
     }
 }
