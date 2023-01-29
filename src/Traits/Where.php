@@ -12,6 +12,7 @@
 namespace Asmthry\PhpQueryBuilder\Traits;
 
 use Asmthry\PhpQueryBuilder\QueryConstants;
+use InvalidArgumentException;
 
 trait Where
 {
@@ -87,6 +88,60 @@ trait Where
             "field" => $field,
             "in" => $values,
             "condition" => QueryConstants::NOTIN
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Start sql where statement grouping
+     *
+     * @param string $logic The value must be '' / 'OR' / 'AND'
+     * @return object Will return current instance
+     */
+    public function groupStart(string $logic = '')
+    {
+        if (!in_array($logic, ['','AND', 'OR'])) {
+            throw new InvalidArgumentException();
+        }
+
+        $this->where[] = [
+            'group' => QueryConstants::START,
+            'logic' => $logic
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Start sql OR where statement grouping
+     *
+     * @return object $this
+     */
+    public function orGroupStart()
+    {
+        return $this->groupStart('OR');
+    }
+
+    /**
+     * Start sql AND where statement grouping
+     *
+     * @return object $this
+     */
+    public function andGroupStart()
+    {
+        return $this->groupStart('AND');
+    }
+
+    /**
+     * End sql where statement grouping
+     *
+     * @return object $this
+     */
+    public function groupEnd()
+    {
+        $this->where[] = [
+            'group' => QueryConstants::END
         ];
 
         return $this;

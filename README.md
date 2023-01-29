@@ -75,3 +75,38 @@ class Users extends Model{
 (new Users)
     ->whereNotIn('id', [1, 2]);
 ```
+## Where grouping
+
+```PHP
+(new Users)
+    ->groupStart()
+    ->where('id', 1)
+    ->where(['age' => 24, 'name' => 'asmthry'])
+    ->groupEnd()
+```
+### Where AND grouping
+
+```PHP
+(new Users)
+    ->groupStart()
+    ->where('id', 1)
+    ->where('age', 24)
+    ->groupEnd()
+    ->andGroupStart()
+    ->where('id', 2)
+    ->where('age', 25)
+    ->groupEnd()
+```
+### Where OR grouping
+
+```PHP
+(new Users)
+    ->groupStart()
+    ->where('id', 1)
+    ->where('age', 24)
+    ->groupEnd()
+    ->orGroupStart()
+    ->where('id', 2)
+    ->where('age', 25)
+    ->groupEnd()
+```

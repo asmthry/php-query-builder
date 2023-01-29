@@ -21,7 +21,7 @@ class MysqlHelper
      * @var int $key
      */
     private static int $key = 0;
-    
+
     /**
      * Store query data
      *
@@ -49,8 +49,12 @@ class MysqlHelper
 
         foreach ($conditions as $key => $item) {
             static::$key = $key;
-            $isLast = $count > $key && !isset($conditions[$key + 1]['group']);
-            self::createWhereCondition($item, $isLast);
+            if (array_key_exists('group', $item)) {
+                static::createWhereGroupCondition($item);
+            } else {
+                $isLast = $count > $key && !isset($conditions[$key + 1]['group']);
+                self::createWhereCondition($item, $isLast);
+            }
         }
 
         return static::$queryData;
@@ -114,12 +118,12 @@ class MysqlHelper
      * @param string &$query pass the reference of the query string
      * @param array $item current where array item to prepare query
      */
-    private static function whereGroup(string &$query, array $item)
+    private static function createWhereGroupCondition(array $item)
     {
-        if ($item['start']) {
-            $query .= empty($item['logic']) ? "(" : " {$item['logic']} (";
-        } else {
-            $query .=  ")";
+        if (!empty($item['logic'])) {
+            static::$queryData['query'] .= $item['logic'] . ' ';
         }
+
+        static::$queryData['query'] .= QueryConstantsValue::get($item['group']);
     }
 }

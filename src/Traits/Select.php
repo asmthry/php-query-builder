@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the asmthry package.
  *
  * (c) asmthry <asmthry@gmail.com>

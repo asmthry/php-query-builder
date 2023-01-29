@@ -42,6 +42,20 @@ class QueryConstantsValue
     public const NOTIN = ' NOT IN ';
 
     /**
+     * Group starting notation
+     *
+     * @var const START
+     */
+    public const START = '(';
+
+    /**
+     * Group ending notation
+     *
+     * @var const END
+     */
+    public const END = ')';
+
+    /**
      * This function will return mysql statement value
      *
      * @param string $const name of the constant

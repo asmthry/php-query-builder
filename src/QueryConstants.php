@@ -43,4 +43,18 @@ class QueryConstants
      * @var const NOTIN
      */
     public const NOTIN = 'NOTIN';
+
+    /**
+     * Group starting notation
+     *
+     * @var const START
+     */
+    public const START = 'START';
+
+    /**
+     * Group ending notation
+     *
+     * @var const END
+     */
+    public const END = 'END';
 }
