@@ -53,6 +53,32 @@ trait Create
     public function createNew()
     {
         static::$createIndex++;
+    }
+
+    /**
+     * Create table using array items
+     *
+     * @param array $values Values to create new row
+     */
+    public function create(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->setCreate($key, $value);
+        }
+
+        return $this->save();
+    }
+
+    /**
+     * Create table using bulk array items
+     *
+     * @param array $values Values to create new row
+     */
+    public function bulkCreate(array $values)
+    {
+        foreach ($values as $value) {
+            $this->create($value);
+        }
 
         return $this;
     }

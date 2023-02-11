@@ -41,6 +41,11 @@ class QueryBuilder extends BuildQuery
         return $this;
     }
 
+    /**
+     * Save create data
+     *
+     * @return $this
+     */
     public function save()
     {
         return $this->runQuery(QueryStructure::CREATE);
