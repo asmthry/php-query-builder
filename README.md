@@ -133,3 +133,12 @@ class Users extends Model{
     ->where('age', 25)
     ->groupEnd()
 ```
+
+### Create new record
+```php
+$obj = new Users;
+$obj->name = 'asmthry';
+$obj->email = 'info@asmthry.in';
+$obj->age = '24';
+$obj->save();
+```

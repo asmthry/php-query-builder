@@ -40,4 +40,9 @@ class QueryBuilder extends BuildQuery
 
         return $this;
     }
+
+    public function save()
+    {
+        return $this->runQuery(QueryStructure::CREATE);
+    }
 }

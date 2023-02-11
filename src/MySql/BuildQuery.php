@@ -13,6 +13,7 @@ namespace Asmthry\PhpQueryBuilder\MySql;
 
 use Asmthry\PhpQueryBuilder\Helpers\ClassHelper;
 use Asmthry\PhpQueryBuilder\Helpers\MysqlHelper;
+use Asmthry\PhpQueryBuilder\Traits\Create;
 use Asmthry\PhpQueryBuilder\Traits\Select;
 use Asmthry\PhpQueryBuilder\Traits\Where;
 
@@ -20,6 +21,7 @@ class BuildQuery extends Connection
 {
     use Select;
     use Where;
+    use Create;
 
     /**
      * Name of the table
@@ -174,7 +176,9 @@ class BuildQuery extends Connection
             [
                 '{select}' => 'prepareSelect',
                 '{where}' => 'prepareWhereStatement',
-                '{table}' => 'getTable'
+                '{table}' => 'getTable',
+                '{fields}' => 'setTableFields',
+                '{values}' => 'setValues'
             ]
         );
     }
@@ -193,5 +197,21 @@ class BuildQuery extends Connection
         }
 
         return array_key_exists('query', $where) ? $where['query'] : '';
+    }
+
+    private function setTableFields()
+    {
+        return implode(',', $this->getCreateFields());
+    }
+
+    private function setValues()
+    {
+        $placeHolders = [];
+        foreach ($this->getCreate() as $value) {
+            $this->setQueryParams(array_values($value));
+            $placeHolders[] = rtrim(str_repeat('?,', count($value)), ',');
+        }
+
+        return "(" . implode(',VALUES(', $placeHolders) . ")";
     }
 }
