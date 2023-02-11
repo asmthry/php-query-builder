@@ -120,4 +120,15 @@ class MysqlHelper
 
         static::$queryData['query'] .= QueryConstantsValue::get($item['group']);
     }
+
+    /**
+     * Prepare create query placeholders
+     *
+     * @param array $items array item to prepare query
+     * @return string Create statement value string
+     */
+    public static function prepareCreatePlaceHolders($items)
+    {
+        return  '(' . rtrim(str_repeat('?,', count($items)), ',') . '),';
+    }
 }
