@@ -13,31 +13,82 @@ namespace Asmthry\PhpQueryBuilder\Traits;
 
 trait Create
 {
+    /**
+     * Content for create array
+     *
+     * @var array $create
+     */
     private array $create = [];
-    private static int $_createIndex = 0;
-    private static array $_createFields = [];
 
+    /**
+     * Index of the create array
+     *
+     * @var int $createIndex
+     */
+    private static int $createIndex = 0;
+
+    /**
+     * Array field for create content
+     *
+     * @var array $createFields
+     */
+    private static array $createFields = [];
+
+    /**
+     * This magic method will set field values
+     *
+     * @param string $field Name of the field
+     * @param string $value Value for the related field
+     */
     public function __set($field, $value)
     {
         $this->setCreate($field, $value);
     }
 
-    private function setCreate($field, $value)
+    /**
+     * Increase create array index
+     *
+     * @return $this
+     */
+    public function createNew()
     {
-        if (!array_key_exists($field, static::$_createFields)) {
-            static::$_createFields[]=$field;
-        }
-        
-        $this->create[static::$_createIndex][$field] = $value;
+        static::$createIndex++;
+
+        return $this;
     }
 
+    /**
+     * This function will return create array
+     *
+     * @return array create array
+     */
     public function getCreate()
     {
         return $this->create;
     }
 
+    /**
+     * This function will return fields
+     *
+     * @return array
+     */
     public function getCreateFields()
     {
-        return static::$_createFields;
+        return static::$createFields;
+    }
+
+    /**
+     * Add items to create array
+     *
+     * @param string $field Name of the field
+     * @param string $value Value for the related field
+     */
+    private function setCreate($field, $value)
+    {
+        if (!in_array($field, static::$createFields)) {
+            static::$createFields[] = $field;
+        }
+
+        $this->create[static::$createIndex][$field] = $value;
     }
 }

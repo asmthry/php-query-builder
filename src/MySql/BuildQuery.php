@@ -199,19 +199,30 @@ class BuildQuery extends Connection
         return array_key_exists('query', $where) ? $where['query'] : '';
     }
 
+    /**
+     * Prepare create field names
+     *
+     * @return string
+     */
     private function setTableFields()
     {
         return implode(',', $this->getCreateFields());
     }
 
+    /**
+     * Prepare values for create content
+     *
+     * @return string
+     */
     private function setValues()
     {
-        $placeHolders = [];
-        foreach ($this->getCreate() as $value) {
-            $this->setQueryParams(array_values($value));
-            $placeHolders[] = rtrim(str_repeat('?,', count($value)), ',');
+        $placeHolders = '';
+
+        foreach ($this->getCreate() as $item) {
+            $this->setQueryParams(array_values($item));
+            $placeHolders .= MysqlHelper::prepareCreatePlaceHolders($item);
         }
 
-        return "(" . implode(',VALUES(', $placeHolders) . ")";
+        return rtrim($placeHolders, ',');
     }
 }

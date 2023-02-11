@@ -92,7 +92,6 @@ class Connection
      */
     public function executeQuery(string $query, array $values = [])
     {
-        var_dump($query, $values);
         $query = static::$database->prepare($query);
         $query->execute($values);
 
