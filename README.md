@@ -141,4 +141,13 @@ $obj->name = 'asmthry';
 $obj->email = 'info@asmthry.in';
 $obj->age = '24';
 $obj->save();
+
+$array = [
+    'name' => 'asmthry',
+    'email' => 'info@asmthry.in',
+    'age' => '24'
+];
+
+(new Users)->create($array);
+(new Users)->bulkCreate([$array]);
 ```
