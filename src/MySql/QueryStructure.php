@@ -21,9 +21,16 @@ final class QueryStructure
     public const SELECT = 'SELECT {select} FROM {table} {where}';
 
     /**
-     * Constant variable to handle select queries
+     * Constant variable to handle create queries
      *
-     * @property const SELECT
+     * @property const CREATE
      */
     public const CREATE = 'INSERT INTO {table} ({fields}) VALUES {values}';
+
+    /**
+     * Constant variable to handle update queries
+     *
+     * @property const UPDATE
+     */
+    public const UPDATE = 'UPDATE {table} SET {fieldValues} {where}';
 }
