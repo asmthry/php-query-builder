@@ -15,6 +15,7 @@ use Asmthry\PhpQueryBuilder\Helpers\ClassHelper;
 use Asmthry\PhpQueryBuilder\Helpers\MysqlHelper;
 use Asmthry\PhpQueryBuilder\Traits\Create;
 use Asmthry\PhpQueryBuilder\Traits\Select;
+use Asmthry\PhpQueryBuilder\Traits\Update;
 use Asmthry\PhpQueryBuilder\Traits\Where;
 
 class BuildQuery extends Connection
@@ -22,6 +23,7 @@ class BuildQuery extends Connection
     use Select;
     use Where;
     use Create;
+    use Update;
 
     /**
      * Name of the table
@@ -178,7 +180,8 @@ class BuildQuery extends Connection
                 '{where}' => 'prepareWhereStatement',
                 '{table}' => 'getTable',
                 '{fields}' => 'setTableFields',
-                '{values}' => 'setValues'
+                '{values}' => 'setValues',
+                '{fieldValues}' => 'setFieldValues',
             ]
         );
     }
@@ -224,5 +227,17 @@ class BuildQuery extends Connection
         }
 
         return rtrim($placeHolders, ',');
+    }
+
+    private function setFieldValues()
+    {
+        $fields = [];
+        $this->setQueryParams($this->getUpdate());
+        
+        foreach ($this->getUpdate() as $key => $value) {
+            $fields[] = "{$key}=:{$key}";
+        }
+
+        return join(',', $fields);
     }
 }

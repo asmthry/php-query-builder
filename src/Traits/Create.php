@@ -53,6 +53,8 @@ trait Create
     public function createNew()
     {
         static::$createIndex++;
+
+        return $this;
     }
 
     /**
@@ -62,11 +64,7 @@ trait Create
      */
     public function create(array $values)
     {
-        foreach ($values as $key => $value) {
-            $this->setCreate($key, $value);
-        }
-
-        return $this->save();
+        return $this->prepareCreateArray($values)->save();
     }
 
     /**
@@ -77,10 +75,10 @@ trait Create
     public function bulkCreate(array $values)
     {
         foreach ($values as $value) {
-            $this->create($value);
+            $this->prepareCreateArray($value);
         }
 
-        return $this;
+        return $this->save();
     }
 
     /**
@@ -91,6 +89,21 @@ trait Create
     public function getCreate()
     {
         return $this->create;
+    }
+
+    /**
+     * This function will return fields
+     *
+     * @param array $values Values to create new record
+     * @return object $this
+     */
+    private function prepareCreateArray(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->setCreate($key, $value);
+        }
+
+        return $this->createNew();
     }
 
     /**

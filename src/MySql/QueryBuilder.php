@@ -50,4 +50,14 @@ class QueryBuilder extends BuildQuery
     {
         return $this->runQuery(QueryStructure::CREATE);
     }
+
+    /**
+     * Update data
+     *
+     * @return $this
+     */
+    public function patch()
+    {
+        return $this->runQuery(QueryStructure::UPDATE);
+    }
 }
