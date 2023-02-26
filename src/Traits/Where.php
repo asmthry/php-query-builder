@@ -125,6 +125,17 @@ trait Where
     }
 
     /**
+     * Short method for id where condition
+     *
+     * @param string|int $id Id you want to find
+     * @param string $field Name of the field
+     */
+    public function find($id, string $field = 'id')
+    {
+        return $this->where($field, $id);
+    }
+
+    /**
      * Start sql where statement grouping
      *
      * @param string $logic The value must be '' / 'OR' / 'AND'
