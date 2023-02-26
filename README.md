@@ -53,9 +53,10 @@ class Users extends Model{
 ## Where statement
 
 ```PHP
-(new Users)
-    ->where('id', 1)
-    ->where(['age' => 24, 'name' => 'asmthry']);
+(new Users)->where('id', 1);
+
+// Find by id
+(new Users)->find(2)
 ```
 ## OR Where statement
 
@@ -78,8 +79,7 @@ class Users extends Model{
 ```
 ## Where IN statement
 ```PHP
-(new Users)
-    ->whereIn('id', [1, 2]);
+(new Users)->whereIn('id', [1, 2]);
 ```
 ## OR Where IN statement
 ```PHP
@@ -89,8 +89,7 @@ class Users extends Model{
 ```
 ## Where NOT IN statement
 ```PHP
-(new Users)
-    ->whereNotIn('id', [1, 2]);
+(new Users)->whereNotIn('id', [1, 2]);
 ```
 ## OR Where NOT IN statement
 ```PHP
@@ -142,6 +141,8 @@ $obj->email = 'info@asmthry.in';
 $obj->age = '24';
 $obj->save();
 
+// OR 
+
 $array = [
     'name' => 'asmthry',
     'email' => 'info@asmthry.in',
@@ -150,4 +151,11 @@ $array = [
 
 (new Users)->create($array);
 (new Users)->bulkCreate([$array]);
+```
+
+### Update Existing Data
+```php
+(new Users)
+    ->find(2)
+    ->update(['name' => 'New Name]);
 ```
