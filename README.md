@@ -157,5 +157,5 @@ $array = [
 ```php
 (new Users)
     ->find(2)
-    ->update(['name' => 'New Name]);
+    ->update(['name' => 'New Name']);
 ```
